@@ -4,13 +4,16 @@
     <title>Анализ вызовов скорой помощи</title>
     <link rel="stylesheet" href="/css/bootstrap.css"/>
 
+    <!--<script src="/js/Chart.js"></script>-->
     <script src="/js/jquery-3.2.1.js"></script>
     <script src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 </head>
 <body>
 <div th:fragment="header">
     <div class="mainmenu-area">
-        <nav class="navbar navbar-light navbar-static-top" style="background-color: #e3f2fd;">
+        <nav class="navbar navbar-light navbar-static-top" style="background-color: #E3F2FD;">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
@@ -25,7 +28,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="/">Главная</a></li>
                         <li><a href="/analysis">Статистика вызовов</a></li>
-                        <li><a href="/decision">Графики</a></li>
+                        <li><a href="/charts">Графики</a></li>
                         <li><a href="/logout">Выйти</a></li>
                     </ul>
                 </div>
