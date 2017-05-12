@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Войдите с помощью логина и пароля</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="alert alert-danger" role="alert" th:if="${error}">Неправильный логин и/или пароль!</div>
+                    <div class="alert alert-info" role="alert" th:if="${logout}">Вы вышли из аккаунта</div>
+                    <form method="post">
+                        <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
+                        <div class="form-group">
+                            <label for="username">Логин</label>
+                            <input type="text" class="form-control" id="username" placeholder="Username"
+                                   name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input type="password" class="form-control" id="password" placeholder="Password"
+                                   name="password">
+                        </div>
+                        <button type="submit" class="btn btn-default">Войти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

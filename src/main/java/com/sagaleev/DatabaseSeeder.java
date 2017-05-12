@@ -2,14 +2,18 @@ package com.sagaleev;
 
 import com.sagaleev.domain.model.DiseaseStatistics;
 import com.sagaleev.domain.model.Hospital;
+import com.sagaleev.domain.model.Role;
 import com.sagaleev.domain.repository.DiseaseStatisticsRepository;
 import com.sagaleev.domain.repository.HospitalRepository;
+import com.sagaleev.domain.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -17,30 +21,49 @@ public class DatabaseSeeder {
 
     private final DiseaseStatisticsRepository diseaseStatisticsRepository;
     private final HospitalRepository hospitalRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public DatabaseSeeder(DiseaseStatisticsRepository diseaseStatisticsRepository, HospitalRepository hospitalRepository) {
+    public DatabaseSeeder(DiseaseStatisticsRepository diseaseStatisticsRepository, HospitalRepository hospitalRepository,
+                          RoleRepository roleRepository) {
         this.diseaseStatisticsRepository = diseaseStatisticsRepository;
         this.hospitalRepository = hospitalRepository;
+        this.roleRepository = roleRepository;
     }
 
     @PostConstruct
     public void init() {
+        initRoles();
         initHospitals();
         initStatistics();
     }
 
+    private void initRoles(){
+        Role role1 = new Role();
+        role1.setAuthority("HospitalAccount");
+        roleRepository.save(role1);
+    }
+
     private void initHospitals(){
-        Hospital hospital = new Hospital("hosp1", "123",
-                "123", "lala@gmail.com", "Областная больница",
-                "ул. Советская");
+        Role role = roleRepository.findByAuthority("HospitalAccount");
+
+        Hospital hospital = new Hospital();
+        hospital.setLogin("hosp1");
+        hospital.setPassword(bCryptPasswordEncoder.encode("123"));
+        hospital.setPasswordConfirm(bCryptPasswordEncoder.encode("123"));
+        hospital.setEmail("lala@gmail.com");
+        hospital.setName("Областная больница");
+        hospital.setAddress("ул. Советская");
+        hospital.setRoles(Arrays.asList(role));
+
         hospitalRepository.save(hospital);
     }
 
     private void initStatistics(){
         Hospital hospital = hospitalRepository.findOneByName("Областная больница");
-        List<DiseaseStatistics> statistics = new ArrayList<>();
 
+        List<DiseaseStatistics> statistics = new ArrayList<>();
         statistics.add(new DiseaseStatistics(2014, Month.JANUARY, 610,116, 103, 5, 264,	590,	332,	144,	376,	16,	245,	223,	90,	16,	100, hospital));
         statistics.add(new DiseaseStatistics(2014, Month.FEBRUARY, 868, 128, 102, 7, 168,  542, 331, 158, 382, 18, 229, 178, 84, 16, 84, hospital));
         statistics.add(new DiseaseStatistics(2014, Month.MARCH, 1461, 118, 103, 3, 186, 555, 366, 151, 401, 18, 253, 197, 93, 17, 93, hospital));

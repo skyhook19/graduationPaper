@@ -18,16 +18,8 @@ public class Hospital {
     private String address;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hospital")
     private List<DiseaseStatistics> diseaseStatistics;
-
-    public Hospital(String login, String password, String passwordConfirm, String email, String name, String address) {
-        this.login = login;
-        this.password = password;
-        this.passwordConfirm = passwordConfirm;
-        this.email = email;
-        this.name = name;
-        this.address = address;
-        diseaseStatistics = new ArrayList<>();
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles;
 
     public Hospital(){
         diseaseStatistics = new ArrayList<>();
@@ -98,9 +90,17 @@ public class Hospital {
         this.diseaseStatistics = diseaseStatistics;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
-        return "Hospital, id=" + id +
+        return "Hospital: id=" + id +
                 ", login=" + login +
                 ", email=" + email +
                 ", address=" + address +
