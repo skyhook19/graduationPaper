@@ -49,12 +49,12 @@ public class DatabaseSeeder {
         Role role = roleRepository.findByAuthority("HospitalAccount");
 
         Hospital hospital = new Hospital();
-        hospital.setLogin("hosp1");
-        hospital.setPassword(bCryptPasswordEncoder.encode("123"));
-        hospital.setPasswordConfirm(bCryptPasswordEncoder.encode("123"));
+        hospital.setLogin("hospitalSaratov");
+        hospital.setPassword(bCryptPasswordEncoder.encode("toku19"));
+        hospital.setPasswordConfirm(bCryptPasswordEncoder.encode("toku19"));
         hospital.setEmail("lala@gmail.com");
-        hospital.setName("Областная больница");
-        hospital.setAddress("ул. Советская");
+        hospital.setName("Саратовский ГМУ им. В. И. Разумовского Минздрава России");
+        hospital.setAddress("ул. Большая Садовая");
         hospital.setRoles(Arrays.asList(role));
 
         hospitalRepository.save(hospital);

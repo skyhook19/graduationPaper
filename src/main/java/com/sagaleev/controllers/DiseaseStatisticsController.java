@@ -6,8 +6,16 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class DiseaseStatisticsController {
 
-    @GetMapping(value = "/charts")
-    public String getAll(){
-        return "charts";
+    @GetMapping(value = "/weatherDiseaseChart")
+    public String getweatherDiseaseStats(){
+        return "weatherDiseaseChart";
     }
+
+    @GetMapping(value = "/yearDiseasesPiechart")
+    public String getYearDiseasesStats(){
+        return "yearDiseasesPiechart";
+    }
+
+
+
 }
