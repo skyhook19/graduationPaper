@@ -10,6 +10,8 @@ public interface HospitalService {
 
     Hospital getHospitalByLogin(String login);
 
+    Hospital getCurrentHospital();
+
     void saveHospital(Hospital hospital);
 
 }

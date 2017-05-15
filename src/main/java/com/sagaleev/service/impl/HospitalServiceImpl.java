@@ -4,7 +4,11 @@ import com.sagaleev.domain.model.Hospital;
 import com.sagaleev.domain.repository.HospitalRepository;
 import com.sagaleev.service.HospitalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.security.Security;
 
 @Service
 public class HospitalServiceImpl implements HospitalService{
@@ -29,6 +33,15 @@ public class HospitalServiceImpl implements HospitalService{
     @Override
     public Hospital getHospitalByLogin(String login) {
         return hospitalRepository.findByLogin(login);
+    }
+
+    @Override
+    public Hospital getCurrentHospital() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null){
+            return hospitalRepository.findByLogin(authentication.getName());
+        }
+        return null;
     }
 
     @Override

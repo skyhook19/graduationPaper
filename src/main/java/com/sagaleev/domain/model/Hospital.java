@@ -17,7 +17,7 @@ public class Hospital {
     private String name;
     private String address;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "hospital")
-    private List<DiseaseStatistics> diseaseStatistics;
+    private List<AmbulanceCallStats> diseaseStatistics;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
@@ -82,11 +82,11 @@ public class Hospital {
         this.address = address;
     }
 
-    public List<DiseaseStatistics> getDiseaseStatistics() {
+    public List<AmbulanceCallStats> getDiseaseStatistics() {
         return diseaseStatistics;
     }
 
-    public void setDiseaseStatistics(List<DiseaseStatistics> diseaseStatistics) {
+    public void setDiseaseStatistics(List<AmbulanceCallStats> diseaseStatistics) {
         this.diseaseStatistics = diseaseStatistics;
     }
 
