@@ -49,9 +49,9 @@ public class DatabaseSeeder {
         Role role = roleRepository.findByAuthority("HospitalAccount");
 
         Hospital hospital = new Hospital();
-        hospital.setLogin("hospital1");
-        hospital.setPassword(bCryptPasswordEncoder.encode("toku19"));
-        hospital.setPasswordConfirm(bCryptPasswordEncoder.encode("toku19"));
+        hospital.setLogin("1");
+        hospital.setPassword(bCryptPasswordEncoder.encode("1"));
+        hospital.setPasswordConfirm(bCryptPasswordEncoder.encode("1"));
         hospital.setEmail("lala@gmail.com");
         hospital.setName("Саратовский ГМУ им. В. И. Разумовского Минздрава России");
         hospital.setAddress("ул. Большая Садовая");
@@ -61,7 +61,7 @@ public class DatabaseSeeder {
     }
 
     private void initStatistics(){
-        Hospital hospital = hospitalRepository.findByLogin("hospital1");
+        Hospital hospital = hospitalRepository.findByLogin("1");
 
         List<AmbulanceCallStats> statistics = new ArrayList<>();
 

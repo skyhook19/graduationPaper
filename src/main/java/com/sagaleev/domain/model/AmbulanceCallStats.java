@@ -83,6 +83,7 @@ public class AmbulanceCallStats {
                 ", year=" + year +
                 ", month=" + month +
                 ", hospitalId=" + hospital.getId() +
-                ", disease=" + disease;
+                ", disease=" + disease +
+                ", count=" + count;
     }
 }
