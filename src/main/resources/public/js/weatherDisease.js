@@ -10,7 +10,7 @@ $(function () {
         var year = $("#yearSelect option:selected").text();
         var weather = $("#weatherSelect option:selected").text();
         var diseaseData = getAmbulanceCallData(diseaseName, year);
-        var weatherData = getWeatherDataFromServer(weather);
+        var weatherData = getWeatherDataFromServer(weather, year);
 
         drawChart(diseaseName, year, weather, diseaseData, weatherData);
     }
@@ -23,7 +23,7 @@ $(function () {
             'global': false,
             'dataType': 'json',
             'contentType' : "application/json",
-            'url': "/getAmbulanceCallStatsForYear",
+            'url': "/getAmbulanceCallStatsByYearAndDisease",
             'data': JSON.stringify({
                 year: year,
                 diseaseName: diseaseName
@@ -35,7 +35,7 @@ $(function () {
         return tmp;
     }
 
-    function getWeatherDataFromServer(weather) {
+    function getWeatherDataFromServer(weather, year) {
         var tmp = null;
         $.ajax({
             'async': false,
@@ -44,7 +44,10 @@ $(function () {
             'dataType': 'json',
             'contentType' : "application/json",
             'url': "/getWeatherDataForYear",
-            'data': JSON.stringify({weather : weather}),
+            'data': JSON.stringify({
+                weatherName : weather,
+                year : year
+            }),
             'success': function (data) {
                 tmp = data;
             }

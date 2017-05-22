@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +26,15 @@ public class RestWeatherStatsController {
     public double[] getWeatherDataForYear(@RequestBody Map<String, String> map){
         Integer year = new Integer(map.get("year"));
         String weatherName = map.get("weatherName");
-
         List<WeatherStats> statsForYear = service.getWeatherStatsByYear(year);
         List<Double> values = new ArrayList<>(statsForYear.size());
+
+        statsForYear.sort(new Comparator<WeatherStats>() {
+            @Override
+            public int compare(WeatherStats o1, WeatherStats o2) {
+                return o1.getMonth().getValue() - o2.getMonth().getValue();
+            }
+        });
 
         for (WeatherStats stats :
                 statsForYear) {

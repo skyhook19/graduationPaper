@@ -8,47 +8,22 @@
 
 <div class="container">
     <div class="row">
-        <div id="piechart" class="col-md-6 col-md-offset-2" style="margin-top:25px; width: 1000px; height: 600px;"></div>
+        <select id="yearSelect">
+            <option>2011</option>
+            <option>2012</option>
+            <option>2013</option>
+            <option selected>2014</option>
+            <option>2015</option>
+        </select>
+        <button id="showNewChart">
+            Показать данные
+        </button>
+    </div>
+    <div class="row">
+        <div id="piechart" class="col-md-6" style="margin-top:25px; width: 1000px; height: 600px;"></div>
     </div>
 </div>
 
-<script type="text/javascript">
-
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-
-        var data = google.visualization.arrayToDataTable([
-            ['Task', 'Hours per Day'],
-            ['ОРВИ',     8986],
-            ['Инфаркт миокарда',      1251],
-            ['Инфаркт миокарда с госпитализацией',  1106],
-            ['Инфаркт миокарда со смертельным исходом', 46],
-            ['Стенокардия',    2388],
-            ['Аритмия сердца',     6490],
-            ['Сердечно-сосудистые заболевания',      3465],
-            ['Сердечно-сосудистые заболевания со смертельным исходом',  1725],
-            ['Инсульт', 4937],
-            ['Инсульт со смертельным исходом',    202],
-            ['Пневмония',     2896],
-            ['Бронхиальная астма',      2385],
-            ['Бронхит',  874],
-            ['Язвенная болезнь', 230],
-            ['Гастрит', 1040],
-        ]);
-
-
-
-        var options = {
-            title: 'Сравнительная диаграмма всех случаев вызова скорой помощи',
-            pieHole: 0.4
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-        chart.draw(data, options);
-    }
-</script>
+<script type="text/javascript" src="/js/yearDisease.js"></script>
 </body>
 </html>
