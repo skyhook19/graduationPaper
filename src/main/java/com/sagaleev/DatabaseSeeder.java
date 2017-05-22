@@ -1020,4 +1020,9 @@ public class DatabaseSeeder {
 
         ambulanceCallStatsRepository.save(statistics);
     }
+
+    private void initWeatherStats(){
+
+
+    }
 }

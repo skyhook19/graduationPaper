@@ -1,4 +1,4 @@
-package com.sagaleev.controllers;
+package com.sagaleev.controllers.rest;
 
 import com.sagaleev.domain.dto.AmbulanceCallStatsDto;
 import com.sagaleev.domain.dtoConverter.AmbulanceCallStatsConverter;
@@ -19,13 +19,6 @@ public class RestAmbulanceCallStatsController {
     @Autowired
     public RestAmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService) {
         this.ambulanceCallStatsService = ambulanceCallStatsService;
-    }
-
-    @PostMapping("/getWeatherDataForYear")
-    public double[] getWeatherDataForYear(@RequestBody Map<String, String>  map){
-        String weather = map.get("weather");
-
-        return new double[]{-14, -17.3, -2, 8, 20, 25, 27, 28, 19, 7, 1, -8};
     }
 
     @PostMapping("/getAmbulanceCallStatsForYear")
