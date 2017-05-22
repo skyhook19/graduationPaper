@@ -1,12 +1,10 @@
 package com.sagaleev;
 
-import com.sagaleev.domain.model.AmbulanceCallStats;
-import com.sagaleev.domain.model.Disease;
-import com.sagaleev.domain.model.Hospital;
-import com.sagaleev.domain.model.Role;
+import com.sagaleev.domain.model.*;
 import com.sagaleev.domain.repository.AmbulanceCallStatsRepository;
 import com.sagaleev.domain.repository.HospitalRepository;
 import com.sagaleev.domain.repository.RoleRepository;
+import com.sagaleev.domain.repository.WeatherStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -20,16 +18,18 @@ import java.util.List;
 public class DatabaseSeeder {
 
     private final AmbulanceCallStatsRepository ambulanceCallStatsRepository;
+    private final WeatherStatsRepository weatherStatsRepository;
     private final HospitalRepository hospitalRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public DatabaseSeeder(AmbulanceCallStatsRepository ambulanceCallStatsRepository, HospitalRepository hospitalRepository,
-                          RoleRepository roleRepository) {
+                          RoleRepository roleRepository, WeatherStatsRepository weatherStatsRepository) {
         this.ambulanceCallStatsRepository = ambulanceCallStatsRepository;
         this.hospitalRepository = hospitalRepository;
         this.roleRepository = roleRepository;
+        this.weatherStatsRepository = weatherStatsRepository;
     }
 
     @PostConstruct
@@ -37,6 +37,7 @@ public class DatabaseSeeder {
         initRoles();
         initHospitals();
         initAmbulanceCallStats();
+        initWeatherStats();
     }
 
     private void initRoles(){
@@ -1023,6 +1024,74 @@ public class DatabaseSeeder {
 
     private void initWeatherStats(){
 
+        Hospital hospital = hospitalRepository.findByLogin("1");
 
+        List<WeatherStats> weatherStats = new ArrayList<>();
+
+        weatherStats.add(new WeatherStats(2015, Month.DECEMBER, hospital, -1.1, 762.1,	82.7, 5.9, 79.44, -14.0, 9.5, 46.2));
+        weatherStats.add(new WeatherStats(2015, Month.NOVEMBER, hospital, 1.4,	761.0,	86.1,	5.0,	72.62,	-6.6, 11.8, 128.9));
+        weatherStats.add(new WeatherStats(2015, Month.OCTOBER, hospital, 4.9,	765.2,	68.7,	5.0,	67.30,	-4.7, 22.7, 48.6));
+        weatherStats.add(new WeatherStats(2015, Month.SEPTEMBER, hospital, 18.4, 765.5, 54.9, 3.2, 44.80, 6.5, 32.0, 10.5));
+        weatherStats.add(new WeatherStats(2015, Month.AUGUST, hospital, 20.3, 762.6, 54.1, 4.1, 37.03, 8.4, 33.7, 16.1));
+        weatherStats.add(new WeatherStats(2015, Month.JULY, hospital, 21.9,	757.6, 57.3, 4.3, 50.0, 12.3, 36.0, 40.1));
+        weatherStats.add(new WeatherStats(2015, Month.JUNE, hospital, 23.8, 759.0, 49.9, 4.0, 51.71, 10.6,	37.4, 96.3));
+        weatherStats.add(new WeatherStats(2015, Month.MAY, hospital, 17.1, 759.1, 55.0, 4.1, 62.2, 7.0, 33.4, 61.5));
+        weatherStats.add(new WeatherStats(2015, Month.APRIL, hospital, 	8.1, 758.6,	58.0, 4.9, 59.26, -4.6, 26.0, 109.1));
+        weatherStats.add(new WeatherStats(2015, Month.MARCH, hospital, -1.6, 771.3,	75.4, 4.3, 47.47, -14.4, 12.0, 3.5));
+        weatherStats.add(new WeatherStats(2015, Month.FEBRUARY, hospital, -5.5, 766.4, 85.9, 4.3, 58.08, -17.1, 3.5, 24.8));
+        weatherStats.add(new WeatherStats(2015, Month.JANUARY, hospital, -9.0, 764.9, 85.0, 4.9, 60.05,	-26.5, 3.0, 31.6));
+
+        weatherStats.add(new WeatherStats(2014, Month.DECEMBER, hospital, -5.6, 764.9,	85.2, 4.6, 79.40, -17.5, 3.0, 70.6));
+        weatherStats.add(new WeatherStats(2014, Month.NOVEMBER, hospital, -2.7, 772.7, 87.2, 3.2, 48.12, -15.0, 7.7, 25.8));
+        weatherStats.add(new WeatherStats(2014, Month.OCTOBER, hospital, 5.6, 765.8, 65.3, 4.8,	56.39,	-9.6, 20.0, 13.4));
+        weatherStats.add(new WeatherStats(2014, Month.SEPTEMBER, hospital, 14.9, 764.8, 58.8, 3.3, 41.59, 2.7, 25.0, 4.3));
+        weatherStats.add(new WeatherStats(2014, Month.AUGUST, hospital, 23.0, 758.6, 58.1, 3.9, 47.09, 12.2, 37.1, 36.2));
+        weatherStats.add(new WeatherStats(2014, Month.JULY, hospital, 22.2, 761.4, 50.4, 3.6, 32.79, 11.8, 33.7, 12.5));
+        weatherStats.add(new WeatherStats(2014, Month.JUNE, hospital, 19.3, 759.0, 57.7, 4.2, 58.58, 8.5, 31.6, 83.1));
+        weatherStats.add(new WeatherStats(2014, Month.MAY, hospital, 19.0, 763.1, 53.0, 3.8, 53.20, 3.3, 31.6, 15.5));
+        weatherStats.add(new WeatherStats(2014, Month.APRIL, hospital, 7.3, 763.4, 56.6, 4.9, 49.27, -4.3, 22.0, 33.1));
+        weatherStats.add(new WeatherStats(2014, Month.MARCH, hospital, -0.1, 762.1, 73.8, 4.7, 46.31, -12.5, 17.0, 34.7));
+        weatherStats.add(new WeatherStats(2014, Month.FEBRUARY, hospital, -9.0, 770.6, 81.6, 3.8, 58.15, -26.4, 3.0, 31.2));
+        weatherStats.add(new WeatherStats(2014, Month.JANUARY, hospital, -9.0, 767.3, 82.7, 4.9, 52.54, -28.8, 2.8, 49.4));
+
+        weatherStats.add(new WeatherStats(2013, Month.DECEMBER, hospital, -3.1, 763.7, 84.3, 5.2, 68.83, -11.8, 3.8, 17.9));
+        weatherStats.add(new WeatherStats(2013, Month.NOVEMBER, hospital, 3.3, 765.1, 84.0, 4.5, 61.83, -6.6, 12.4, 17.6));
+        weatherStats.add(new WeatherStats(2013, Month.OCTOBER, hospital, -6.9, 765.0, 76.9, 4.3, 60.50,	-3.4, 15.9, 10.9));
+        weatherStats.add(new WeatherStats(2013, Month.SEPTEMBER, hospital, 13.0, 757.3,	80.7, 4.1, 84.09, 1.5, 23.6, 153.2));
+        weatherStats.add(new WeatherStats(2013, Month.AUGUST, hospital,  21.7, 759.9, 58.8, 3.9, 57.78, 8.2, 33.8, 13.6));
+        weatherStats.add(new WeatherStats(2013, Month.JULY, hospital, 21.3, 756.4, 62.5, 3.9, 65.58, 13.0, 32.0, 29.2));
+        weatherStats.add(new WeatherStats(2013, Month.JUNE, hospital,  20.9, 758.7, 62.1, 3.6, 61.98, 9.5, 33.6, 111.3));
+        weatherStats.add(new WeatherStats(2013, Month.MAY, hospital, 19.4, 761.6, 52.6, 4.1, 65.07,	7.0, 31.7, 39.8));
+        weatherStats.add(new WeatherStats(2013, Month.APRIL, hospital, 9.6, 762.1, 61.1, 4.9, 43.72, -1.0, 28.0, 30.6));
+        weatherStats.add(new WeatherStats(2013, Month.MARCH, hospital, -3.7, 759.2, 76.8, 5.3, 62.35, -18.4, 4.6, 45.3));
+        weatherStats.add(new WeatherStats(2013, Month.FEBRUARY, hospital, -6.6, 768.0, 82.0, 4.1, 66.45, -14.0, 1.2, 24.3));
+        weatherStats.add(new WeatherStats(2013, Month.JANUARY, hospital, -8.4, 762.9, 85.5, 4.0, 77.28,	-21.8, 1.7, 50.4));
+
+        weatherStats.add(new WeatherStats(2012, Month.DECEMBER, hospital, -7.1, 771.0, 82.8, 4.9, 47.23, -21.4, 9.5, 29.4));
+        weatherStats.add(new WeatherStats(2012, Month.NOVEMBER, hospital, 1.9, 767.9, 81.7, 4.5, 68.10,	-4.0, 13.4, 28.5));
+        weatherStats.add(new WeatherStats(2012, Month.OCTOBER, hospital, 9.5, 764.5, 73.0, 4.8, 60.84, -0.4, 22.3, 57));
+        weatherStats.add(new WeatherStats(2012, Month.SEPTEMBER, hospital, 14.9, 762.3, 64.3, 4.7, 53.92, 4.8, 27.8, 23.2));
+        weatherStats.add(new WeatherStats(2012, Month.AUGUST, hospital, 22.4, 758.0, 61.6, 4.3, 66.17, 9.7, 36.6, 79.1));
+        weatherStats.add(new WeatherStats(2012, Month.JULY, hospital, 23.6, 760.2, 54.9, 4.1, 59.46, 12.7, 35.0, 41.1));
+        weatherStats.add(new WeatherStats(2012, Month.JUNE, hospital, 22.6, 757.5, 56.2, 4.7, 61.90, 9.3, 38.4, 40.8));
+        weatherStats.add(new WeatherStats(2012, Month.MAY, hospital, 19.1, 761.5, 50.1, 5.0, 49.35,	4.2, 31.7, 3.2));
+        weatherStats.add(new WeatherStats(2012, Month.APRIL, hospital, 	13.4, 758.9, 66.1, 4.2, 66.03, -1.8, 28.0, 18.4));
+        weatherStats.add(new WeatherStats(2012, Month.MARCH, hospital, -4.9, 757.0, 81.6, 5.7, 67.70, -22.0, 4.9, 52.2));
+        weatherStats.add(new WeatherStats(2012, Month.FEBRUARY, hospital, -14.6, 772.3, 82.4, 5.2, 51.50, -29.6, 3.5, 52.2));
+        weatherStats.add(new WeatherStats(2012, Month.JANUARY, hospital, -9.6, 769.6, 85.0, 4.6, 51.90, -23.1, 5.2, 64));
+
+        weatherStats.add(new WeatherStats(2011, Month.DECEMBER, hospital, -4.5, 766.8, 87.0, 5.7, 75.26, -16.5, 4.4, 52.9));
+        weatherStats.add(new WeatherStats(2011, Month.NOVEMBER, hospital, -2.8, 764.6, 79.2, 5.3, 42.09, -15.0, 10.0, 30));
+        weatherStats.add(new WeatherStats(2011, Month.OCTOBER, hospital, -7.3, 764.1, 77.0, 4.7, 63.35,	-2.4, 19.8, 37));
+        weatherStats.add(new WeatherStats(2011, Month.SEPTEMBER, hospital, 14.3, 758.3, 71.9, 4.7, 71.29, 4.6, 30.2, 53.5));
+        weatherStats.add(new WeatherStats(2011, Month.AUGUST, hospital, 21.6, 759.5, 54.2, 4.3, 41.19, 7.3, 35.1, 20.5));
+        weatherStats.add(new WeatherStats(2011, Month.JULY, hospital, 26.0, 759.2, 51.7, 4.2, 49.76, 12.4, 38.3, 2.2));
+        weatherStats.add(new WeatherStats(2011, Month.JUNE, hospital, 19.3, 756.5, 65.2, 4.6, 53.24, 8.6, 31.5, 58.7));
+        weatherStats.add(new WeatherStats(2011, Month.MAY, hospital, 16.9, 761.9, 55.2, 4.5, 45.63,	7.6, 28.3, 15.2));
+        weatherStats.add(new WeatherStats(2011, Month.APRIL, hospital, 6.8, 761.3, 64.3, 4.4, 48.19, -6.0, 22.7, 14.2));
+        weatherStats.add(new WeatherStats(2011, Month.MARCH, hospital, -4.6, 765.6, 76.0, 4.9, 40.89, -19.6, 4.5, 9));
+        weatherStats.add(new WeatherStats(2011, Month.FEBRUARY, hospital, -14.2, 764.7, 79.6, 4.7, 44.53, -26.1, 13.5, 56.6));
+
+        weatherStatsRepository.save(weatherStats);
     }
 }

@@ -29,9 +29,10 @@ public class WeatherStats {
     public WeatherStats() {
     }
 
-    public WeatherStats(int year, Month month, double avgTemperature, double atmospherePressure, double humidity, double windSpeed, double cloudiness, double minTemperature, double maxTemperature, double downfall, Hospital hospital) {
+    public WeatherStats(int year, Month month, Hospital hospital, double avgTemperature, double atmospherePressure, double humidity, double windSpeed, double cloudiness, double minTemperature, double maxTemperature, double downfall) {
         this.year = year;
         this.month = month;
+        this.hospital = hospital;
         this.avgTemperature = avgTemperature;
         this.atmospherePressure = atmospherePressure;
         this.humidity = humidity;
@@ -40,7 +41,6 @@ public class WeatherStats {
         this.minTemperature = minTemperature;
         this.maxTemperature = maxTemperature;
         this.downfall = downfall;
-        this.hospital = hospital;
     }
 
     public long getId() {
