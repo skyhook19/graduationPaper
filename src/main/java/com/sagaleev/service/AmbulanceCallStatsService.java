@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface AmbulanceCallStatsService {
 
+    List<AmbulanceCallStats> getAll();
+
     List<AmbulanceCallStats> getAmbulanceCallStatsByYear(int Year);
 
     List<AmbulanceCallStats> getAmbulanceCallStatsByYearAndDisease(int year, Disease disease);

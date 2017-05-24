@@ -2,6 +2,7 @@ package com.sagaleev.domain.model;
 
 import javax.persistence.*;
 import java.time.Month;
+import java.time.YearMonth;
 
 @Entity
 public class WeatherStats {
@@ -9,29 +10,26 @@ public class WeatherStats {
     @Id
     @GeneratedValue
     private long id;
-    private int year;
-    private Month month;
-
-    //weather stats
-    private double avgTemperature;
-    private double atmospherePressure;
-    private double humidity; //влажность
-    private double windSpeed;
-    private double cloudiness; //облачность
-    private double minTemperature;
-    private double maxTemperature;
-    private double downfall; //осадки
+    private YearMonth yearMonth;
 
     @ManyToOne
     @JoinColumn(name = "hospitalId")
     private Hospital hospital;
 
+    private double avgTemperature;
+    private double atmospherePressure;
+    private double humidity;
+    private double windSpeed;
+    private double cloudiness;
+    private double minTemperature;
+    private double maxTemperature;
+    private double downfall;
+
     public WeatherStats() {
     }
 
-    public WeatherStats(int year, Month month, Hospital hospital, double avgTemperature, double atmospherePressure, double humidity, double windSpeed, double cloudiness, double minTemperature, double maxTemperature, double downfall) {
-        this.year = year;
-        this.month = month;
+    public WeatherStats(YearMonth yearMonth, Hospital hospital, double avgTemperature, double atmospherePressure, double humidity, double windSpeed, double cloudiness, double minTemperature, double maxTemperature, double downfall) {
+        this.yearMonth = yearMonth;
         this.hospital = hospital;
         this.avgTemperature = avgTemperature;
         this.atmospherePressure = atmospherePressure;
@@ -51,20 +49,20 @@ public class WeatherStats {
         this.id = id;
     }
 
-    public int getYear() {
-        return year;
+    public YearMonth getYearMonth() {
+        return yearMonth;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setYearMonth(YearMonth yearMonth) {
+        this.yearMonth = yearMonth;
     }
 
-    public Month getMonth() {
-        return month;
+    public Hospital getHospital() {
+        return hospital;
     }
 
-    public void setMonth(Month month) {
-        this.month = month;
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
     }
 
     public double getAvgTemperature() {
@@ -131,20 +129,11 @@ public class WeatherStats {
         this.downfall = downfall;
     }
 
-    public Hospital getHospital() {
-        return hospital;
-    }
-
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
-    }
-
     @Override
     public String toString() {
         return "WeatherStats {" +
                 "id : " + id +
-                ", year : " + year +
-                ", month : " + month +
+                ", yearMonth : " + yearMonth +
                 ", avgTemperature : " + avgTemperature +
                 ", atmospherePressure : " + atmospherePressure +
                 ", humidity : " + humidity +

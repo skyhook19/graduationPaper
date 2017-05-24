@@ -9,6 +9,4 @@ public interface WeatherStatsRepository extends CrudRepository<WeatherStats, Lon
 
     @Override
     List<WeatherStats> findAll();
-
-    List<WeatherStats> findAllByYear(int year);
 }

@@ -25,6 +25,11 @@ public class AmbulanceCallStatsServiceImpl implements AmbulanceCallStatsService 
     }
 
     @Override
+    public List<AmbulanceCallStats> getAll() {
+        return ambulanceCallStatsRepository.findAll();
+    }
+
+    @Override
     public List<AmbulanceCallStats> getAmbulanceCallStatsByYear(int year) {
         return ambulanceCallStatsRepository.findAllByYear(year);
     }

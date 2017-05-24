@@ -26,24 +26,13 @@ public class RestWeatherStatsController {
     public double[] getWeatherDataForYear(@RequestBody Map<String, String> map){
         Integer year = new Integer(map.get("year"));
         String weatherName = map.get("weatherName");
-        List<WeatherStats> statsForYear = service.getWeatherStatsByYear(year);
+        List<WeatherStats> statsForYear = service.getByYear(year);
         List<Double> values = new ArrayList<>(statsForYear.size());
 
-        statsForYear.sort(new Comparator<WeatherStats>() {
-            @Override
-            public int compare(WeatherStats o1, WeatherStats o2) {
-                return o1.getMonth().getValue() - o2.getMonth().getValue();
-            }
-        });
-
-        for (WeatherStats stats :
-                statsForYear) {
-            values.add(getWeatherValueByName(stats, weatherName));
-        }
-
+        statsForYear.sort(Comparator.comparing(WeatherStats::getYearMonth));
+        statsForYear.forEach(stats -> values.add(getWeatherValueByName(stats, weatherName)));
         return values.stream().mapToDouble(d->d).toArray();
     }
-
 
     private double getWeatherValueByName(WeatherStats stats, String weatherName){
         switch(weatherName){

@@ -7,6 +7,7 @@ import com.sagaleev.service.WeatherStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,11 +21,24 @@ public class WeatherStatsServiceImpl implements WeatherStatsService{
     }
 
     @Override
-    public List<WeatherStats> getWeatherStatsByYear(int year) {
-        return repository.findAllByYear(year);
-    }
-    @Override
-    public void saveWeatherStats(WeatherStats statistics) {
+    public List<WeatherStats> getByYear(int year) {
+        List<WeatherStats> allStats = repository.findAll();
+        List<WeatherStats> statsByYear = new ArrayList<>();
 
+        for (WeatherStats stats : allStats) {
+            if(stats.getYearMonth().getYear() == year) statsByYear.add(stats);
+        };
+
+        return statsByYear;
+    }
+
+    @Override
+    public List<WeatherStats> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public void save(WeatherStats statistics) {
+        repository.save(statistics);
     }
 }

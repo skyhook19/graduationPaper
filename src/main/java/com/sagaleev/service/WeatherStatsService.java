@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface WeatherStatsService {
 
-    List<WeatherStats> getWeatherStatsByYear(int year);
+    List<WeatherStats> getByYear(int year);
 
-    void saveWeatherStats(WeatherStats statistics);
+    List<WeatherStats> getAll();
+
+    void save(WeatherStats statistics);
 }
