@@ -1,28 +1,21 @@
 package com.sagaleev.domain.dto;
 
+import java.time.YearMonth;
+
 public class AmbulanceCallStatsDto {
-    private int year;
-    private String monthName;
+    private YearMonth yearMonth;
     private String diseaseName;
     private int count;
 
     public AmbulanceCallStatsDto() {
     }
 
-    public int getYear() {
-        return year;
+    public YearMonth getYearMonth() {
+        return yearMonth;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public String getMonthName() {
-        return monthName;
-    }
-
-    public void setMonthName(String monthName) {
-        this.monthName = monthName;
+    public void setYearMonth(YearMonth yearMonth) {
+        this.yearMonth = yearMonth;
     }
 
     public String getDiseaseName() {

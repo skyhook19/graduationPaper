@@ -27,7 +27,7 @@ public class WeatherStatsServiceImpl implements WeatherStatsService{
 
         for (WeatherStats stats : allStats) {
             if(stats.getYearMonth().getYear() == year) statsByYear.add(stats);
-        };
+        }
 
         return statsByYear;
     }

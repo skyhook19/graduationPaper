@@ -30,7 +30,6 @@ public class RestAmbulanceCallStatsController {
         String diseaseName = map.get("diseaseName");
 
         Disease disease = null;
-
         for(Map.Entry<Disease, String> entry: AmbulanceCallStatsConverter.diseaseNaming.entrySet()){
             if(diseaseName.equals(entry.getValue())){
                 disease = entry.getKey();
@@ -40,10 +39,7 @@ public class RestAmbulanceCallStatsController {
 
         List<AmbulanceCallStats> ambulanceCallStats = ambulanceCallStatsService.getAmbulanceCallStatsByYearAndDisease(year, disease);
         List<Integer> ambulanceCallStatsCount = new ArrayList<>(ambulanceCallStats.size());
-
-        for (AmbulanceCallStats stats : ambulanceCallStats) {
-            ambulanceCallStatsCount.add(stats.getCount());
-        }
+        ambulanceCallStats.forEach(stats -> ambulanceCallStatsCount.add(stats.getCount()));
 
         return ambulanceCallStatsCount.stream().mapToInt(i->i).toArray();
     }

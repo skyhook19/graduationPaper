@@ -2,6 +2,7 @@ package com.sagaleev.domain.model;
 
 import javax.persistence.*;
 import java.time.Month;
+import java.time.YearMonth;
 
 @Entity
 public class AmbulanceCallStats {
@@ -9,8 +10,7 @@ public class AmbulanceCallStats {
     @Id
     @GeneratedValue
     private long id;
-    private int year;
-    private Month month;
+    private YearMonth yearMonth;
     private Disease disease;
     private int count;
 
@@ -21,9 +21,8 @@ public class AmbulanceCallStats {
     public AmbulanceCallStats() {
     }
 
-    public AmbulanceCallStats(int year, Month month, Disease disease, int count, Hospital hospital) {
-        this.year = year;
-        this.month = month;
+    public AmbulanceCallStats(YearMonth yearMonth, Disease disease, int count, Hospital hospital) {
+        this.yearMonth = yearMonth;
         this.disease = disease;
         this.count = count;
         this.hospital = hospital;
@@ -37,20 +36,12 @@ public class AmbulanceCallStats {
         this.id = id;
     }
 
-    public int getYear() {
-        return year;
+    public YearMonth getYearMonth() {
+        return yearMonth;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public Month getMonth() {
-        return month;
-    }
-
-    public void setMonth(Month month) {
-        this.month = month;
+    public void setYearMonth(YearMonth yearMonth) {
+        this.yearMonth = yearMonth;
     }
 
     public Disease getDisease() {
@@ -61,14 +52,6 @@ public class AmbulanceCallStats {
         this.disease = disease;
     }
 
-    public Hospital getHospital() {
-        return hospital;
-    }
-
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
-    }
-
     public int getCount() {
         return count;
     }
@@ -77,11 +60,18 @@ public class AmbulanceCallStats {
         this.count = count;
     }
 
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+    }
+
     @Override
     public String toString() {
         return "AmbulanceCallStats { id=" + id +
-                ", year=" + year +
-                ", month=" + month +
+                ", yearMonth=" + yearMonth +
                 ", hospitalId=" + hospital.getId() +
                 ", disease=" + disease +
                 ", count=" + count;

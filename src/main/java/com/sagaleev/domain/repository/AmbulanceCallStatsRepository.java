@@ -6,6 +6,7 @@ import com.sagaleev.domain.model.Hospital;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.List;
 
 
@@ -14,9 +15,5 @@ public interface AmbulanceCallStatsRepository extends CrudRepository<AmbulanceCa
     @Override
     List<AmbulanceCallStats> findAll();
 
-    List<AmbulanceCallStats> findAllByYear(int year);
-
-    List<AmbulanceCallStats> findAllByYearAndDisease(int year, Disease disease);
-
-    List<AmbulanceCallStats> findAllByYearAndMonth(int year, Month month);
+    List<AmbulanceCallStats> findAllByYearMonth(YearMonth yearMonth);
 }

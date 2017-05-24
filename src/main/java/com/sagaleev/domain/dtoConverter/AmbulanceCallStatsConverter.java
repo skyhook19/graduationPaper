@@ -48,8 +48,7 @@ public class AmbulanceCallStatsConverter {
 
     public static AmbulanceCallStatsDto convertToDto(AmbulanceCallStats ambulanceCallStats) {
         AmbulanceCallStatsDto statsDto = new AmbulanceCallStatsDto();
-        statsDto.setYear(ambulanceCallStats.getYear());
-        statsDto.setMonthName(monthNaming.get(ambulanceCallStats.getMonth()));
+        statsDto.setYearMonth(ambulanceCallStats.getYearMonth());
         statsDto.setDiseaseName(diseaseNaming.get(ambulanceCallStats.getDisease()));
         statsDto.setCount(ambulanceCallStats.getCount());
 
