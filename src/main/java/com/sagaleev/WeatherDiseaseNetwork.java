@@ -14,6 +14,7 @@ import org.encog.ml.train.MLTrain;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation;
+import org.encog.util.arrayutil.NormalizationAction;
 import org.encog.util.arrayutil.NormalizeArray;
 import org.encog.util.arrayutil.NormalizedField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class WeatherDiseaseNetwork {
         double[][] normalizedWeatherInput = normalizeArray(weatherInput);
         double[][] ideal = null;
 
-        MLDataSet set = new BasicMLDataSet(weatherInput, ideal);
+        MLDataSet set = new BasicMLDataSet(normalizedWeatherInput, ideal);
 
         System.out.println("Neural Network Results: ");
 
@@ -52,15 +54,15 @@ public class WeatherDiseaseNetwork {
 
             System.out.print("Weather data input: ");
             for (int i = 0; i < pair.getInputArray().length; i++) {
-                System.out.print(", " + pair.getInputArray()[i]);
+                System.out.print(", " + denormalize(pair.getInputArray()[i]));
             }
             System.out.println();
 
             System.out.print("Ambulance call data result: ");
             for (int i = 0; i < output.getData().length; i++) {
-                double normalizedOutputValue = output.getData()[i];
-                System.out.print(", " + denormalize(normalizedOutputValue));
-                result[i] = normalizedOutputValue;
+                double outputValue = output.getData(i);
+                System.out.print(", " + denormalize(outputValue));
+                result[i] = denormalize(outputValue);
             }
         }
 
@@ -162,23 +164,52 @@ public class WeatherDiseaseNetwork {
     private double[][] normalizeArray(double[][] input){
         double[][] result = new double[input.length][input[0].length];
 
+        //TODO возможно, проблема в том, что я ищу максимум среди всех строк, а нужно искать для каждой строки свой максимум
+
+        double min = getMin(input);
+        double max = getMax(input);
+
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input[i].length; j++) {
-                result[i][j] = normalize(input[i][j]);
+                result[i][j] = normalize(max, min, input[i][j]);
             }
         }
 
         return result;
     }
 
-    private double normalize(double value) {
-        NormalizedField normalizedField = new NormalizedField();
-        return normalizedField.normalize(value);
+    private double normalize(double actualHigh, double actualLow, double valueToNormalize) {
+        NormalizedField normalizedField = new NormalizedField(NormalizationAction.Normalize, "normalize", actualHigh, actualLow, 1, -1);
+        return normalizedField.normalize(valueToNormalize);
     }
 
     private double denormalize(double normalizedValue) {
         NormalizedField normalizedField = new NormalizedField();
         return normalizedField.deNormalize(normalizedValue);
+    }
+
+    private double getMax(double[][] arr){
+        double max = arr[0][0];
+
+        for (int i = 0; i < arr.length; i++){
+            for (int j = 0; j < arr[i].length; j++){
+                if(arr[i][j] > max) max = arr[i][j];
+            }
+        }
+
+        return max;
+    }
+
+    private double getMin(double[][] arr){
+        double min = arr[0][0];
+
+        for (int i = 0; i < arr.length; i++){
+            for (int j = 0; j < arr[i].length; j++){
+                if(arr[i][j] < min) min = arr[i][j];
+            }
+        }
+
+        return min;
     }
 }
 
