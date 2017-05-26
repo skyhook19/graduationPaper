@@ -63,10 +63,7 @@ public class RestAmbulanceCallStatsController {
             }
         }
 
-        double[][] input = new double[][]{
-                {-1.1, 762.1,	82.7, 5.9, 79.44, -14.0, 9.5, 46.2}
-        };
-
+        double[] input = new double[]{-1.1, 762.1,	82.7, 5.9, 79.44, -14.0, 9.5, 46.2};
         weatherDiseaseNetwork.computeNetwork(input);
 
         return  ambulanceCallCountByDisease;

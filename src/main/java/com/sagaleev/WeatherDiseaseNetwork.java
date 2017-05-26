@@ -8,6 +8,8 @@ import org.encog.engine.network.activation.ActivationSigmoid;
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.MLDataPair;
 import org.encog.ml.data.MLDataSet;
+import org.encog.ml.data.basic.BasicMLData;
+import org.encog.ml.data.basic.BasicMLDataPair;
 import org.encog.ml.data.basic.BasicMLDataSet;
 import org.encog.ml.train.MLTrain;
 import org.encog.neural.networks.BasicNetwork;
@@ -28,6 +30,10 @@ public class WeatherDiseaseNetwork {
 
     private static final int NORMALIZED_HIGH = 1;
     private static final int NORMALIZED_LOW = 0;
+    private static final double ACTUAL_HIGH_FOR_AMBULANCE_CALLS = 2925;
+    private static final double ACTUAL_LOW_FOR_AMBULANCE_CALLS = 0;
+    private static final double ACTUAL_HIGH_FOR_WEATHER_INPUT = 772.7;
+    private static final double ACTUAL_LOW_FOR_WEATHER_INPUT = -29.6;
 
     @Autowired
     public WeatherDiseaseNetwork(WeatherStatsService weatherStatsService, AmbulanceCallStatsService ambulanceCallStatsService) {
@@ -35,35 +41,20 @@ public class WeatherDiseaseNetwork {
         this.ambulanceCallStatsService = ambulanceCallStatsService;
     }
 
-
-    public double[] computeNetwork(double[][] weatherInput) {
+    public double[] computeNetwork(double[] weatherInput) {
         BasicNetwork network = train();
+        double[] normalizedWeatherInput = new double[weatherInput.length];
+        for (int i = 0; i < weatherInput.length; i++) {
+            normalizedWeatherInput[i] = normalize(ACTUAL_HIGH_FOR_WEATHER_INPUT, ACTUAL_LOW_FOR_WEATHER_INPUT, weatherInput[i]);
+        }
 
- /*       double[][] normalizedWeatherInput = normalizeArray(weatherInput);
-        double[][] ideal = null;
+        MLData inputData = new BasicMLData(normalizedWeatherInput);
+        final MLData output = network.compute(inputData);
 
-        MLDataSet set = new BasicMLDataSet(normalizedWeatherInput, ideal);
-
-        System.out.println("Neural Network Results: ");*/
-
-        double[] result = new double[15];
-
-        /*for (MLDataPair pair : set) {
-            final MLData output = network.compute(pair.getInput());
-
-            System.out.print("Weather data input: ");
-            for (int i = 0; i < pair.getInputArray().length; i++) {
-                System.out.print(", " + denormalize(pair.getInputArray()[i]));
-            }
-            System.out.println();
-
-            System.out.print("Ambulance call data result: ");
-            for (int i = 0; i < output.getData().length; i++) {
-                double outputValue = output.getData(i);
-                System.out.print(", " + denormalize(outputValue));
-                result[i] = denormalize(outputValue);
-            }
-        }*/
+        double[] result = new double[output.getData().length];
+        for (int i = 0; i < output.getData().length; i++) {
+            result[i] = denormalize(ACTUAL_HIGH_FOR_AMBULANCE_CALLS, ACTUAL_LOW_FOR_AMBULANCE_CALLS, output.getData(i));
+        }
 
         return result;
     }
@@ -71,24 +62,17 @@ public class WeatherDiseaseNetwork {
     private BasicNetwork train() {
         double[][] weatherDataSet = getTrainingWeatherDataSet();
         double[][] ambulanceCallDataSet = getTrainingAmbulanceCallsDataSet();
+
         printDataArray(weatherDataSet, "weather data");
         printDataArray(ambulanceCallDataSet, "ambulanceCallResultArray");
 
-        double[][] normalizedWeatherDataSet = new double[weatherDataSet.length][];
-        for (int i = 0; i < weatherDataSet.length; i++) {
-            normalizedWeatherDataSet[i] = normalizeArray(weatherDataSet[i]);
-        }
-
-        double[][] normalizedAmbulanceCallDataSet = new double[ambulanceCallDataSet.length][];
-        for (int i = 0; i < ambulanceCallDataSet.length; i++) {
-            normalizedAmbulanceCallDataSet[i] = normalizeArray(ambulanceCallDataSet[i]);
-        }
+        double[][] normalizedWeatherDataSet = normalizeArray(weatherDataSet);
+        double[][] normalizedAmbulanceCallDataSet = normalizeArray(ambulanceCallDataSet);
 
         MLDataSet trainingSet = new BasicMLDataSet(normalizedWeatherDataSet, normalizedAmbulanceCallDataSet);
 
         BasicNetwork network = new BasicNetwork();
         network.addLayer(new BasicLayer(null, true, 8));
-        network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 16));
         network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 32));
         network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 64));
         network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 32));
@@ -97,14 +81,13 @@ public class WeatherDiseaseNetwork {
 
         MLTrain train = new ResilientPropagation(network, trainingSet);
 
-        //обучение, до тех пор пока ошибка не станет меньше n
         //TODO разбить dataSet на данные для обучения(2011-2014) и данные для проверки(2015) и вычислять еще ActualError
         int epoch = 1;
         do {
             train.iteration();
             System.out.println("Epoch #" + epoch + "Error:" + train.getError());
             epoch++;
-        } while (train.getError() > 0.01);
+        } while (train.getError() > 0.005);
 
         return network;
     }
@@ -133,15 +116,15 @@ public class WeatherDiseaseNetwork {
 
     private double[][] getTrainingAmbulanceCallsDataSet() {
         List<AmbulanceCallStats> ambulanceCallStats = ambulanceCallStatsService.getAll();
-        double[][] result = new double[ambulanceCallStats.size()/15][];
+        double[][] result = new double[ambulanceCallStats.size() / 15][];
 
         Comparator<AmbulanceCallStats> comparator = Comparator.comparing(AmbulanceCallStats::getYearMonth);
         comparator = comparator.thenComparing(Comparator.comparing(AmbulanceCallStats::getDisease));
         ambulanceCallStats.sort(comparator);
 
-        for (int i = 0, k = 0; k < ambulanceCallStats.size()/15; k++) {
+        for (int i = 0, k = 0; k < ambulanceCallStats.size() / 15; k++) {
             double[] ambulanceCallValues = new double[15];
-            for (int j = 0; j < 15 ; i++, j++) {
+            for (int j = 0; j < 15; i++, j++) {
                 ambulanceCallValues[j] = ambulanceCallStats.get(i).getCount();
             }
             result[k] = ambulanceCallValues;
@@ -150,7 +133,7 @@ public class WeatherDiseaseNetwork {
         return result;
     }
 
-    private void printDataArray(double[][] dataArray, String name){
+    private void printDataArray(double[][] dataArray, String name) {
         for (int i = 0; i < dataArray.length; i++) {
             System.out.print(name + " [" + i + "]: ");
             for (int j = 0; j < dataArray[i].length; j++) {
@@ -161,26 +144,17 @@ public class WeatherDiseaseNetwork {
 
     }
 
-    private double[] normalizeArray(double[] arr){
-        double[] normalizedInputArray = new double[arr.length];
-        double min = getMinInArray(arr);
-        double max = getMaxInArray(arr);
+    private double[][] normalizeArray(double[][] input) {
+        double[][] result = new double[input.length][input[0].length];
+        double min = getMinInArray(input);
+        double max = getMaxInArray(input);
 
-        for (int i = 0; i < arr.length; i++) {
-            normalizedInputArray[i] = normalize(max, min, arr[i]);
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[i].length; j++) {
+                result[i][j] = normalize(max, min, input[i][j]);
+            }
         }
-        return normalizedInputArray;
-    }
-
-    private double[] denormalizeArray(double[] arr){
-        double[] denormalizedInputArray = new double[arr.length];
-        double min = getMinInArray(arr);
-        double max = getMaxInArray(arr);
-
-        for (int i = 0; i < arr.length; i++) {
-            denormalizedInputArray[i] = denormalize(max, min, arr[i]);
-        }
-        return denormalizedInputArray;
+        return result;
     }
 
     private double normalize(double actualHigh, double actualLow, double valueToNormalize) {
@@ -193,18 +167,24 @@ public class WeatherDiseaseNetwork {
         return normalizedField.deNormalize(normalizedValue);
     }
 
-    private double getMaxInArray(double[] arr){
-        double max = arr[0];
-        for (int i = 1; i < arr.length; i++){
-            if(arr[i] > max) max = arr[i];
+    private double getMaxInArray(double[][] arr) {
+        double max = arr[0][0];
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                if (arr[i][j] > max) max = arr[i][j];
+            }
         }
         return max;
     }
 
-    private double getMinInArray(double[] arr){
-        double min = arr[0];
-        for (int i = 1; i < arr.length; i++){
-            if(arr[i] < min) min = arr[i];
+    private double getMinInArray(double[][] arr) {
+        double min = arr[0][0];
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                if (arr[i][j] < min) min = arr[i][j];
+            }
         }
         return min;
     }
