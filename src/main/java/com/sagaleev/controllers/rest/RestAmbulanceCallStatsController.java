@@ -1,5 +1,6 @@
 package com.sagaleev.controllers.rest;
 
+import com.sagaleev.AcuteRespiratoryViralInfectionNetwork;
 import com.sagaleev.WeatherDiseaseNetwork;
 import com.sagaleev.domain.dto.AmbulanceCallStatsDto;
 import com.sagaleev.domain.dtoConverter.AmbulanceCallStatsConverter;
@@ -16,12 +17,16 @@ import java.util.*;
 public class RestAmbulanceCallStatsController {
 
     private final AmbulanceCallStatsService ambulanceCallStatsService;
+    private final AcuteRespiratoryViralInfectionNetwork acuteRespiratoryViralInfectionNetwork;
     private final WeatherDiseaseNetwork weatherDiseaseNetwork;
 
     @Autowired
-    public RestAmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService, WeatherDiseaseNetwork weatherDiseaseNetwork) {
+    public RestAmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService,
+                                            WeatherDiseaseNetwork weatherDiseaseNetwork,
+                                            AcuteRespiratoryViralInfectionNetwork acuteRespiratoryViralInfectionNetwork) {
         this.ambulanceCallStatsService = ambulanceCallStatsService;
         this.weatherDiseaseNetwork = weatherDiseaseNetwork;
+        this.acuteRespiratoryViralInfectionNetwork = acuteRespiratoryViralInfectionNetwork;
     }
 
     @PostMapping("/getAmbulanceCallStatsByYearAndDisease")
@@ -64,7 +69,7 @@ public class RestAmbulanceCallStatsController {
         }
 
         double[] input = new double[]{-1.1, 762.1,	82.7, 5.9, 79.44, -14.0, 9.5, 46.2};
-        weatherDiseaseNetwork.computeNetwork(input);
+        acuteRespiratoryViralInfectionNetwork.computeNetwork(input);
 
         return  ambulanceCallCountByDisease;
     }

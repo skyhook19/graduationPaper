@@ -16,4 +16,6 @@ public interface AmbulanceCallStatsRepository extends CrudRepository<AmbulanceCa
     List<AmbulanceCallStats> findAll();
 
     List<AmbulanceCallStats> findAllByYearMonth(YearMonth yearMonth);
+
+    List<AmbulanceCallStats> findAllByDisease(Disease disease);
 }

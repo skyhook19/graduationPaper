@@ -50,6 +50,11 @@ public class AmbulanceCallStatsServiceImpl implements AmbulanceCallStatsService 
     }
 
     @Override
+    public List<AmbulanceCallStats> getAllByDisease(Disease disease) {
+        return ambulanceCallStatsRepository.findAllByDisease(disease);
+    }
+
+    @Override
     public void saveDiseaseStatistics(AmbulanceCallStats statistics) {
         ambulanceCallStatsRepository.save(statistics);
     }

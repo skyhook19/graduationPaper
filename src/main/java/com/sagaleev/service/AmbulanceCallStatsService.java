@@ -16,5 +16,7 @@ public interface AmbulanceCallStatsService {
 
     List<AmbulanceCallStats> getAmbulanceCallStatsByYearAndDisease(int year, Disease disease);
 
+    List<AmbulanceCallStats> getAllByDisease(Disease disease);
+
     void saveDiseaseStatistics(AmbulanceCallStats statistics);
 }
