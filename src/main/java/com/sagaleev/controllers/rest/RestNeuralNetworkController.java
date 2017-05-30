@@ -1,7 +1,7 @@
 package com.sagaleev.controllers.rest;
 
 import com.sagaleev.domain.model.AmbulanceCallStats;
-import com.sagaleev.domain.model.Disease;
+import com.sagaleev.domain.model.NetworkHelper;
 import com.sagaleev.domain.model.NeuralNetwork;
 import com.sagaleev.domain.model.WeatherStats;
 import com.sagaleev.service.AmbulanceCallStatsService;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,49 +34,32 @@ public class RestNeuralNetworkController {
 
     @PostMapping("/getResultsOfNetworkWork")
     public double[] getResultsOfNetworkWork() {
-        List<NeuralNetwork> networks = getAllNetworks();
+        NeuralNetwork network = new NeuralNetwork();
 
-        double[] weatherInput = new double[]{-14.2, 764.7, 79.6, 4.7, 44.53, -26.1, 13.5, 56.6};
-        double[] result = new double[1];
+        double[] weatherInput = new double[]{-5.6, 764.9, 85.2, 4.6, 79.40, -17.5, 3.0, 70.6};
+        double[] result = getResultOfNetworkWork(weatherInput, network);
+        double[] denormalizedResult = new double[result.length];
 
-        result[0] = getResultOfNetworkWork(weatherInput, networks.get(0));
+        for (int i = 0; i < result.length; i++) {
+            denormalizedResult[i] = denormalize(NetworkHelper.MAXIMUMS_FOR_AMBULANCE_CALLS.get(i),
+                    NetworkHelper.MINIMUMS_FOR_AMBULANCE_CALLS.get(i), result[i]);
+        }
 
-/*        for (int i = 0; i < networks.size(); i++) {
-            result[i] = getResultOfNetworkWork(weatherInput, networks.get(i));
-        }*/
-
-        return result;
+        return denormalizedResult;
     }
 
-    public double getResultOfNetworkWork(double[] weatherInput, NeuralNetwork neuralNetwork) {
-        neuralNetworkTrainerService.train(neuralNetwork, getTrainingWeatherDataSet(), getTrainingAmbulanceCallsDataSet(neuralNetwork.getDisease()));
+    public double[] getResultOfNetworkWork(double[] weatherInput, NeuralNetwork neuralNetwork) {
+        neuralNetworkTrainerService.train(neuralNetwork, getTrainingWeatherDataSet(), getTrainingAmbulanceCallsDataSet());
 
         double[] normalizedWeatherInput = new double[weatherInput.length];
         for (int i = 0; i < weatherInput.length; i++) {
-            normalizedWeatherInput[i] = normalize(neuralNetwork.getActualHighForInput(), neuralNetwork.getActualLowForInput(), weatherInput[i]);
+            normalizedWeatherInput[i] = normalize(NetworkHelper.MAXIMUMS_FOR_WEATHER.get(i), NetworkHelper.MINIMUMS_FOR_WEATHER.get(i), weatherInput[i]);
         }
 
         MLData inputData = new BasicMLData(normalizedWeatherInput);
         final MLData output = neuralNetwork.getNetwork().compute(inputData);
 
-        return denormalize(neuralNetwork.getActualHighForOutput(), neuralNetwork.getActualLowForOutput(), output.getData(0));
-    }
-
-    private double[][] getTrainingAmbulanceCallsDataSet(Disease disease) {
-        List<AmbulanceCallStats> ambulanceCallStats = ambulanceCallStatsService.getAmbulanceCallStatsByYearAndDisease(2011, disease);
-        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYearAndDisease(2012, disease));
-        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYearAndDisease(2013, disease));
-        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYearAndDisease(2014, disease));
-        double[][] result = new double[ambulanceCallStats.size()][];
-
-        Comparator<AmbulanceCallStats> comparator = Comparator.comparing(AmbulanceCallStats::getYearMonth);
-        ambulanceCallStats.sort(comparator);
-
-        for (int i = 0; i < ambulanceCallStats.size(); i++) {
-            result[i] = new double[]{ambulanceCallStats.get(i).getCount()};
-        }
-
-        return result;
+        return output.getData();
     }
 
     private double[][] getTrainingWeatherDataSet() {
@@ -105,6 +87,27 @@ public class RestNeuralNetworkController {
         return result;
     }
 
+    private double[][] getTrainingAmbulanceCallsDataSet() {
+        List<AmbulanceCallStats> ambulanceCallStats = ambulanceCallStatsService.getAmbulanceCallStatsByYear(2011);
+        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYear(2012));
+        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYear(2013));
+        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYear(2014));
+        double[][] result = new double[ambulanceCallStats.size() / 15][];
+
+        Comparator<AmbulanceCallStats> comparator = Comparator.comparing(AmbulanceCallStats::getYearMonth);
+        comparator.thenComparing(Comparator.comparing(AmbulanceCallStats::getDisease));
+        ambulanceCallStats.sort(comparator);
+
+        for (int i = 0, k = 0; k < ambulanceCallStats.size() / 15; k++) {
+            double[] ambulanceCallValues = new double[15];
+            for (int j = 0; j < 15; i++, j++) {
+                ambulanceCallValues[j] = ambulanceCallStats.get(i).getCount();
+            }
+            result[k] = ambulanceCallValues;
+        }
+        return result;
+    }
+
     private double denormalize(double actualHigh, double actualLow, double normalizedValue) {
         NormalizedField normalizedField = new NormalizedField(NormalizationAction.Normalize, "denormalize",
                 actualHigh, actualLow, NeuralNetwork.NORMALIZED_HIGH, NeuralNetwork.NORMALIZED_LOW);
@@ -115,27 +118,5 @@ public class RestNeuralNetworkController {
         NormalizedField normalizedField = new NormalizedField(NormalizationAction.Normalize, "normalize",
                 actualHigh, actualLow, NeuralNetwork.NORMALIZED_HIGH, NeuralNetwork.NORMALIZED_LOW);
         return normalizedField.normalize(valueToNormalize);
-    }
-
-    private List<NeuralNetwork> getAllNetworks() {
-        List<NeuralNetwork> networks = new ArrayList<>();
-
-        networks.add(new NeuralNetwork(Disease.ACUTE_RESPIRATORY_VIRAL_INFECTION));
-        networks.add(new NeuralNetwork(Disease.MYOCARDIAL_INFARCTION));
-        networks.add(new NeuralNetwork(Disease.MYOCARDIAL_INFARCTION_WITH_HOSPITALIZATION));
-        networks.add(new NeuralNetwork(Disease.FATAL_MYOCARDIAL_INFARCTION));
-        networks.add(new NeuralNetwork(Disease.ANGINA_PECTORIS));
-        networks.add(new NeuralNetwork(Disease.ARRHYTHMIA));
-        networks.add(new NeuralNetwork(Disease.CARDIO_VASCULAR_DISEASE));
-        networks.add(new NeuralNetwork(Disease.FATAL_CARDIO_VASCULAR_DISEASE));
-        networks.add(new NeuralNetwork(Disease.STROKE));
-        networks.add(new NeuralNetwork(Disease.FATAL_STROKE));
-        networks.add(new NeuralNetwork(Disease.PNEUMONIA));
-        networks.add(new NeuralNetwork(Disease.BRONCHIAL_ASTHMA));
-        networks.add(new NeuralNetwork(Disease.BRONCHITIS));
-        networks.add(new NeuralNetwork(Disease.PEPTIC_ULCER_DISEASE));
-        networks.add(new NeuralNetwork(Disease.GASTRITIS));
-
-        return networks;
     }
 }
