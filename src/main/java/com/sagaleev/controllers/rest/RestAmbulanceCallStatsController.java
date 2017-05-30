@@ -1,32 +1,27 @@
 package com.sagaleev.controllers.rest;
 
-import com.sagaleev.AcuteRespiratoryViralInfectionNetwork;
-import com.sagaleev.WeatherDiseaseNetwork;
-import com.sagaleev.domain.dto.AmbulanceCallStatsDto;
 import com.sagaleev.domain.dtoConverter.AmbulanceCallStatsConverter;
 import com.sagaleev.domain.model.AmbulanceCallStats;
 import com.sagaleev.domain.model.Disease;
 import com.sagaleev.service.AmbulanceCallStatsService;
-import org.codehaus.groovy.runtime.powerassert.SourceText;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class RestAmbulanceCallStatsController {
 
     private final AmbulanceCallStatsService ambulanceCallStatsService;
-    private final AcuteRespiratoryViralInfectionNetwork acuteRespiratoryViralInfectionNetwork;
-    private final WeatherDiseaseNetwork weatherDiseaseNetwork;
 
     @Autowired
-    public RestAmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService,
-                                            WeatherDiseaseNetwork weatherDiseaseNetwork,
-                                            AcuteRespiratoryViralInfectionNetwork acuteRespiratoryViralInfectionNetwork) {
+    public RestAmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService) {
         this.ambulanceCallStatsService = ambulanceCallStatsService;
-        this.weatherDiseaseNetwork = weatherDiseaseNetwork;
-        this.acuteRespiratoryViralInfectionNetwork = acuteRespiratoryViralInfectionNetwork;
     }
 
     @PostMapping("/getAmbulanceCallStatsByYearAndDisease")
@@ -67,9 +62,6 @@ public class RestAmbulanceCallStatsController {
                 ambulanceCallCountByDisease.put(diseaseName, stats.getCount());
             }
         }
-
-        double[] input = new double[]{-1.1, 762.1,	82.7, 5.9, 79.44, -14.0, 9.5, 46.2};
-        acuteRespiratoryViralInfectionNetwork.computeNetwork(input);
 
         return  ambulanceCallCountByDisease;
     }
