@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="fragments/fragments :: head">
+</head>
+<body>
+
+<div th:include="fragments/fragments :: header"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Модель погодных данных:</h3>
+            <table id="weatherDataTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Период</th>
+                    <th>Температура, &degС</th>
+                    <th>Атмосферное давление, мм ртутного столба</th>
+                    <th>Относительная влажность, %</th>
+                    <th>Скорость ветра, м/с</th>
+                    <th>Облачность, %</th>
+                    <th>Мин. температура, &degС</th>
+                    <th>Макс. температура, &degС</th>
+                    <th>Количество осадков, мм</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <tr th:each="stat : ${stats}">
+                    <td th:text="${stat.yearMonth}"></td>
+                    <td th:text="${stat.avgTemperature}"></td>
+                    <td th:text="${stat.atmospherePressure}"></td>
+                    <td th:text="${stat.humidity}"></td>
+                    <td th:text="${stat.windSpeed}"></td>
+                    <td th:text="${stat.cloudiness}"></td>
+                    <td th:text="${stat.minTemperature}"></td>
+                    <td th:text="${stat.maxTemperature}"></td>
+                    <td th:text="${stat.downfall}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/prognosis.js"></script>
+</body>
+</html>

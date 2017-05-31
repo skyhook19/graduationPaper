@@ -5,7 +5,6 @@ import com.sagaleev.domain.model.AmbulanceCallStats;
 import com.sagaleev.domain.model.Disease;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,23 +45,19 @@ public class AmbulanceCallStatsConverter {
         put(Month.DECEMBER, "Декабрь");
     }};
 
-    public static AmbulanceCallStatsDto convertToDto(AmbulanceCallStats ambulanceCallStats) {
-        AmbulanceCallStatsDto statsDto = new AmbulanceCallStatsDto();
-        statsDto.setYearMonth(ambulanceCallStats.getYearMonth());
-        statsDto.setDiseaseName(diseaseNaming.get(ambulanceCallStats.getDisease()));
-        statsDto.setCount(ambulanceCallStats.getCount());
-
-        return statsDto;
-    }
-
-    public static List<AmbulanceCallStatsDto> convertToDto(List<AmbulanceCallStats> ambulanceCallStatsList) {
-        List<AmbulanceCallStatsDto> dtoList = new ArrayList<>(ambulanceCallStatsList.size());
-
-        for (AmbulanceCallStats stats :
-                ambulanceCallStatsList) {
-            dtoList.add(convertToDto(stats));
+    public static AmbulanceCallStatsDto convertListForOneMonthToOneDto(List<AmbulanceCallStats> ambulanceCallStats) {
+        if (ambulanceCallStats.size() != 15) {
+            System.out.println("wrong list input");
+            return null;
         }
 
-        return dtoList;
+        AmbulanceCallStatsDto statsDto = new AmbulanceCallStatsDto();
+        int[] statsForMonth = new int[ambulanceCallStats.size()];
+        for (int i = 0; i < ambulanceCallStats.size(); i++) {
+            statsForMonth[i] = ambulanceCallStats.get(i).getCount();
+        }
+        statsDto.setAllDiseasesStats(statsForMonth);
+        statsDto.setYearMonth(ambulanceCallStats.get(0).getYearMonth());
+        return statsDto;
     }
 }

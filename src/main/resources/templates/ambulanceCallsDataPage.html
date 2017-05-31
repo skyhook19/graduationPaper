@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="fragments/fragments :: head">
+</head>
+<body>
+
+<div th:include="fragments/fragments :: header"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Число вызовов скорой помощи по определённому диагнозу за период:</h3>
+            <table id="weatherDataTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Период</th>
+                    <th>ОРВИ</th>
+                    <th>Инфаркт миокарда</th>
+                    <th>ИМ госп.</th>
+                    <th>ИМ смерт.</th>
+                    <th>Стенокардия</th>
+                    <th>Аритмия сердца</th>
+                    <th>Сердечно-сосудистые заболевания</th>
+                    <th>ССЗ смерт.</th>
+                    <th>Инсульт</th>
+                    <th>Инсульт смерт.</th>
+                    <th>Пневмония</th>
+                    <th>Бронхиальная астма</th>
+                    <th>Бронхит</th>
+                    <th>Язвенная болезнь</th>
+                    <th>Гастрит</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <tr th:each="stat : ${stats}">
+                    <td th:text="${stat.yearMonth}"></td>
+                    <td th:text="${stat.acute_respiratory_viral_infection}"></td>
+                    <td th:text="${stat.myocardial_infarction}"></td>
+                    <td th:text="${stat.myocardial_infarction_with_hospitalization}"></td>
+                    <td th:text="${stat.fatal_myocardial_infarction}"></td>
+                    <td th:text="${stat.angina_pectoris}"></td>
+                    <td th:text="${stat.arrhythmia}"></td>
+                    <td th:text="${stat.cardio_vascular_disease}"></td>
+                    <td th:text="${stat.fatal_cardio_vascular_disease}"></td>
+                    <td th:text="${stat.stroke}"></td>
+                    <td th:text="${stat.fatal_stroke}"></td>
+                    <td th:text="${stat.pneumonia}"></td>
+                    <td th:text="${stat.bronchial_asthma}"></td>
+                    <td th:text="${stat.bronchitis}"></td>
+                    <td th:text="${stat.peptic_ulcer_disease}"></td>
+                    <td th:text="${stat.gastritis}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/prognosis.js"></script>
+</body>
+</html>
