@@ -13,6 +13,7 @@ import org.encog.util.arrayutil.NormalizationAction;
 import org.encog.util.arrayutil.NormalizedField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
@@ -24,31 +25,45 @@ public class RestNeuralNetworkController {
     private final AmbulanceCallStatsService ambulanceCallStatsService;
     private final WeatherStatsService weatherStatsService;
     private final NeuralNetworkTrainerService neuralNetworkTrainerService;
+    private final NeuralNetwork network;
 
     @Autowired
     public RestNeuralNetworkController(AmbulanceCallStatsService ambulanceCallStatsService, WeatherStatsService weatherStatsService, NeuralNetworkTrainerService neuralNetworkTrainerService) {
         this.ambulanceCallStatsService = ambulanceCallStatsService;
         this.weatherStatsService = weatherStatsService;
         this.neuralNetworkTrainerService = neuralNetworkTrainerService;
+        network = new NeuralNetwork();
     }
 
     @PostMapping("/getResultsOfNetworkWork")
-    public double[] getResultsOfNetworkWork() {
-        NeuralNetwork network = new NeuralNetwork();
+    public int[] getResultsOfNetworkWork(@RequestBody double[] weatherInput) {
+        System.out.println("im here!");
 
-        double[] weatherInput = new double[]{-5.6, 764.9, 85.2, 4.6, 79.40, -17.5, 3.0, 70.6};
-        double[] result = getResultOfNetworkWork(weatherInput, network);
-        double[] denormalizedResult = new double[result.length];
+        System.out.print("weatherInput = [");
+        for (int i = 0; i < weatherInput.length; i++) {
+            System.out.print(weatherInput[i] + ", ");
+        }
+        System.out.println("]");
 
-        for (int i = 0; i < result.length; i++) {
+        double[] output = getResultOfNetworkWork(weatherInput, network);
+        double[] denormalizedResult = new double[output.length];
+
+        for (int i = 0; i < output.length; i++) {
             denormalizedResult[i] = denormalize(NetworkHelper.MAXIMUMS_FOR_AMBULANCE_CALLS.get(i),
-                    NetworkHelper.MINIMUMS_FOR_AMBULANCE_CALLS.get(i), result[i]);
+                    NetworkHelper.MINIMUMS_FOR_AMBULANCE_CALLS.get(i), output[i]);
         }
 
-        return denormalizedResult;
+        int[] finalResult = new int[denormalizedResult.length];
+
+        for (int i = 0; i < denormalizedResult.length; i++) {
+            Long l = Math.round(denormalizedResult[i]);
+            finalResult[i] = l.intValue();
+        }
+
+        return finalResult;
     }
 
-    public double[] getResultOfNetworkWork(double[] weatherInput, NeuralNetwork neuralNetwork) {
+    private double[] getResultOfNetworkWork(double[] weatherInput, NeuralNetwork neuralNetwork) {
         neuralNetworkTrainerService.train(neuralNetwork, getTrainingWeatherDataSet(), getTrainingAmbulanceCallsDataSet());
 
         double[] normalizedWeatherInput = new double[weatherInput.length];
@@ -63,10 +78,7 @@ public class RestNeuralNetworkController {
     }
 
     private double[][] getTrainingWeatherDataSet() {
-        List<WeatherStats> weatherStats = weatherStatsService.getByYear(2011);
-        weatherStats.addAll(weatherStatsService.getByYear(2012));
-        weatherStats.addAll(weatherStatsService.getByYear(2013));
-        weatherStats.addAll(weatherStatsService.getByYear(2014));
+        List<WeatherStats> weatherStats = weatherStatsService.getAll();
         double[][] result = new double[weatherStats.size()][];
 
         weatherStats.sort(Comparator.comparing(WeatherStats::getYearMonth));
@@ -88,10 +100,7 @@ public class RestNeuralNetworkController {
     }
 
     private double[][] getTrainingAmbulanceCallsDataSet() {
-        List<AmbulanceCallStats> ambulanceCallStats = ambulanceCallStatsService.getAmbulanceCallStatsByYear(2011);
-        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYear(2012));
-        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYear(2013));
-        ambulanceCallStats.addAll(ambulanceCallStatsService.getAmbulanceCallStatsByYear(2014));
+        List<AmbulanceCallStats> ambulanceCallStats = ambulanceCallStatsService.getAll();
         double[][] result = new double[ambulanceCallStats.size() / 15][];
 
         Comparator<AmbulanceCallStats> comparator = Comparator.comparing(AmbulanceCallStats::getYearMonth);

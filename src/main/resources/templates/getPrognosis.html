@@ -8,9 +8,49 @@
 
 <div class="container">
     <div class="row">
-        <button id="getPrognosis">
-            Показать данные
-        </button>
+        <div class="col-md-5">
+            <h4>Заполните данные для получения прогноза:</h4>
+            <div class="form-group">
+                <input type="number" class="form-control" id="temp" placeholder="Температура" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="press" placeholder="Атмосферное давление" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="humid" placeholder="Относительная влажность" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="wind" placeholder="Скорость ветра" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="cloud" placeholder="Облачность" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="minTemp" placeholder="Мин. температура" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="maxTemp" placeholder="Макс. температура" name="username">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control" id="downfall" placeholder="Количество осадков" name="username">
+            </div>
+            <button id="getPrognosis" class="btn btn-primary center-block">Получить прогноз</button>
+        </div>
+        <div class="col-md-7" id = "column2">
+            <h4>Результат:</h4>
+            <table id="resultTable" class="table table-bordered">
+                <col width="70%">
+                <col width="30%">
+                <thead>
+                <tr>
+                    <th>Диагноз</th>
+                    <th>Количество вызовов</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

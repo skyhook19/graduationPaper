@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PrognosisController {
 
     @GetMapping(value = "/getPrognosis")
-    public String getProignosis() {
+    public String getPrognosis() {
         return "getPrognosis";
     }
 }
