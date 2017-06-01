@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="fragments/fragments :: head">
+</head>
+<body>
+
+<div th:include="fragments/fragments :: header"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="text-center">Матрица корреляции Пирсона:</h3>
+            <table id="correlationTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>ОРВИ</th>
+                    <th>Инфаркт миокарда</th>
+                    <th>ИМ госп.</th>
+                    <th>ИМ смерт.</th>
+                    <th>Стенокардия</th>
+                    <th>Аритмия сердца</th>
+                    <th>ССЗ</th>
+                    <th>ССЗ смерт.</th>
+                    <th>Инсульт</th>
+                    <th>Инсульт смерт.</th>
+                    <th>Пневмония</th>
+                    <th>Бронх. астма</th>
+                    <th>Бронхит</th>
+                    <th>Язвенная болезнь</th>
+                    <th>Гастрит</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                <tr th:each="entry : ${map}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:text="${entry.value[0]}"></td>
+                    <td th:text="${entry.value[1]}"></td>
+                    <td th:text="${entry.value[2]}"></td>
+                    <td th:text="${entry.value[3]}"></td>
+                    <td th:text="${entry.value[4]}"></td>
+                    <td th:text="${entry.value[5]}"></td>
+                    <td th:text="${entry.value[6]}"></td>
+                    <td th:text="${entry.value[7]}"></td>
+                    <td th:text="${entry.value[8]}"></td>
+                    <td th:text="${entry.value[9]}"></td>
+                    <td th:text="${entry.value[10]}"></td>
+                    <td th:text="${entry.value[11]}"></td>
+                    <td th:text="${entry.value[12]}"></td>
+                    <td th:text="${entry.value[13]}"></td>
+                    <td th:text="${entry.value[14]}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!--
+<script type="text/javascript" src="/js/prognosis.js"></script>-->
+</body>
+</html>
