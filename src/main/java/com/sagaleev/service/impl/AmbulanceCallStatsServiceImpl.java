@@ -58,4 +58,9 @@ public class AmbulanceCallStatsServiceImpl implements AmbulanceCallStatsService 
     public void saveDiseaseStatistics(AmbulanceCallStats statistics) {
         ambulanceCallStatsRepository.save(statistics);
     }
+
+    @Override
+    public void saveAll(List<AmbulanceCallStats> statsList) {
+        ambulanceCallStatsRepository.save(statsList);
+    }
 }

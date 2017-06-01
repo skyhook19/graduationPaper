@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="fragments/fragments :: head">
+</head>
+<body>
+
+<div th:include="fragments/fragments :: header"></div>
+
+<div class="container">
+    <div class="row">
+        <h4>Введите данные о количестве вызовов скорой помощи и погодных условиях за месяц:</h4>
+    </div>
+    <div class="row">
+        <form th:action="@{/foo}" method="post">
+            <div class="col-md-7" id = "column1">
+                <div class="col-md-5" id = "column2">
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="temp" placeholder="Температура, &degС" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="press" placeholder="Атмосферное давление, мм ртутного столба" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="humid" placeholder="Относительная влажность, %" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="wind" placeholder="Скорость ветра, м/с" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="cloud" placeholder="Облачность, %" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="minTemp" placeholder="Мин. температура, &degС" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="maxTemp" placeholder="Макс. температура, &degС" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="downfall" placeholder="Количество осадков, мм" name="username">
+                    </div>
+                    <button id="getPrognosis" class="btn btn-primary center-block" type="submit">Записать новые данные</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

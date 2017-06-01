@@ -187,4 +187,25 @@ public class AmbulanceCallStatsDto {
         peptic_ulcer_disease = allDiseasesStats[13];
         gastritis = allDiseasesStats[14];
     }
+
+    @Override
+    public String toString() {
+        return "AmbulanceCallStatsDto {" +
+                "yearMonth = " + yearMonth.getYear() + yearMonth.getMonth() +
+                ", acute_respiratory_viral_infection=" + acute_respiratory_viral_infection +
+                ", myocardial_infarction=" + myocardial_infarction +
+                ", myocardial_infarction_with_hospitalization" + myocardial_infarction_with_hospitalization +
+                ", fatal_myocardial_infarction" + fatal_myocardial_infarction +
+                ", angina_pectoris" + angina_pectoris +
+                ", arrhythmia" + arrhythmia +
+                ", cardio_vascular_disease" + cardio_vascular_disease +
+                ", fatal_cardio_vascular_disease" + fatal_cardio_vascular_disease +
+                ", stroke" + stroke +
+                ", fatal_stroke" + fatal_stroke +
+                ", pneumonia" + pneumonia +
+                ", bronchial_asthma" + bronchial_asthma +
+                ", bronchitis" + bronchitis +
+                ", peptic_ulcer_disease" + peptic_ulcer_disease +
+                ", gastritis" + gastritis + "}";
+    }
 }

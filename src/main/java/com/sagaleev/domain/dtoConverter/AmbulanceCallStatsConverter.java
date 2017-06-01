@@ -3,8 +3,10 @@ package com.sagaleev.domain.dtoConverter;
 import com.sagaleev.domain.dto.AmbulanceCallStatsDto;
 import com.sagaleev.domain.model.AmbulanceCallStats;
 import com.sagaleev.domain.model.Disease;
+import com.sagaleev.domain.model.Hospital;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,5 +61,27 @@ public class AmbulanceCallStatsConverter {
         statsDto.setAllDiseasesStats(statsForMonth);
         statsDto.setYearMonth(ambulanceCallStats.get(0).getYearMonth());
         return statsDto;
+    }
+
+    public static List<AmbulanceCallStats> convertOneDtoToList(AmbulanceCallStatsDto dto, Hospital hospital){
+        List<AmbulanceCallStats> stats = new ArrayList<>(15);
+
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.ACUTE_RESPIRATORY_VIRAL_INFECTION, dto.getAcute_respiratory_viral_infection(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.MYOCARDIAL_INFARCTION, dto.getMyocardial_infarction(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.MYOCARDIAL_INFARCTION_WITH_HOSPITALIZATION, dto.getMyocardial_infarction_with_hospitalization(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.FATAL_MYOCARDIAL_INFARCTION, dto.getFatal_myocardial_infarction(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.ANGINA_PECTORIS, dto.getAngina_pectoris(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.ARRHYTHMIA, dto.getArrhythmia(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.CARDIO_VASCULAR_DISEASE, dto.getCardio_vascular_disease(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.FATAL_CARDIO_VASCULAR_DISEASE, dto.getFatal_cardio_vascular_disease(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.STROKE, dto.getStroke(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.FATAL_STROKE, dto.getFatal_stroke(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.PNEUMONIA, dto.getPneumonia(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.BRONCHIAL_ASTHMA, dto.getBronchial_asthma(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.BRONCHITIS, dto.getBronchitis(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.PEPTIC_ULCER_DISEASE, dto.getPeptic_ulcer_disease(), hospital));
+        stats.add(new AmbulanceCallStats(dto.getYearMonth(), Disease.GASTRITIS, dto.getGastritis(), hospital));
+
+        return stats;
     }
 }

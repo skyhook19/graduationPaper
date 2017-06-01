@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -22,6 +23,7 @@ public class WeatherController {
     @GetMapping(value="/weatherData")
     public String getWeatherData(Model model){
         List<WeatherStats> stats = weatherStatsService.getAll();
+        stats.sort(Comparator.comparing(WeatherStats::getYearMonth));
         model.addAttribute("stats", stats);
         return "weatherDataPage";
     }

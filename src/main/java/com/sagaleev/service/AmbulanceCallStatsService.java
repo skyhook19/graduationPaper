@@ -3,9 +3,7 @@ package com.sagaleev.service;
 
 import com.sagaleev.domain.model.AmbulanceCallStats;
 import com.sagaleev.domain.model.Disease;
-import com.sagaleev.domain.model.Hospital;
 
-import java.time.Month;
 import java.util.List;
 
 public interface AmbulanceCallStatsService {
@@ -19,4 +17,6 @@ public interface AmbulanceCallStatsService {
     List<AmbulanceCallStats> getAllByDisease(Disease disease);
 
     void saveDiseaseStatistics(AmbulanceCallStats statistics);
+
+    void saveAll(List<AmbulanceCallStats> statsList);
 }

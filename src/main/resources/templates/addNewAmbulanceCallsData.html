@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="fragments/fragments :: head">
+</head>
+<body>
+
+<div th:include="fragments/fragments :: header"></div>
+
+<div class="container">
+    <div class="row">
+        <h4 class="text-center">Введите данные о количестве вызовов скорой помощи и погодных условиях за месяц:</h4>
+    </div>
+    <div class="row">
+        <form th:object="${ambStats}" th:action="@{/addNewAmbulanceCallData}" method="POST" action="#">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-success" role="alert" th:if="${success}">Вы успешно добавили новые данные</div>
+            <div class="form-group">
+                <input type="text" class="form-control new-data-input" placeholder="Период(в формате <Год>-<Месяц>)" name="yearMonth"
+                       th:field="*{yearMonth}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="ОРВИ" name="acute_respiratory_viral_infection"
+                       th:field="*{acute_respiratory_viral_infection}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Инфаркт миокарда" name="myocardial_infarction"
+                       th:field="*{myocardial_infarction}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Инфаркт миокарда с госпитализацией" name="myocardial_infarction_with_hospitalization"
+                       th:field="*{myocardial_infarction_with_hospitalization}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Инфаркт миокарда со смерт. исходом" name="fatal_myocardial_infarction"
+                       th:field="*{fatal_myocardial_infarction}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Стенокардия" name="angina_pectoris"
+                       th:field="*{angina_pectoris}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Аритмия сердца" name="arrhythmia"
+                       th:field="*{arrhythmia}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Сердечно-сосудистые заболевания" name="cardio_vascular_disease"
+                       th:field="*{cardio_vascular_disease}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Сердечно-сосудистые заболевания со смерт. исходом" name="fatal_cardio_vascular_disease"
+                       th:field="*{fatal_cardio_vascular_disease}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Инсульт" name="stroke"
+                       th:field="*{stroke}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Инсульт со смерт. исходом" name="fatal_stroke"
+                       th:field="*{fatal_stroke}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Пневмония" name="pneumonia"
+                       th:field="*{pneumonia}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Бронхиальная астма" name="bronchial_asthma"
+                       th:field="*{bronchial_asthma}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Бронхит" name="bronchitis"
+                       th:field="*{bronchitis}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Язвенная болезнь" name="peptic_ulcer_disease"
+                       th:field="*{peptic_ulcer_disease}" th:required="required">
+            </div>
+            <div class="form-group">
+                <input type="number" class="form-control new-data-input" placeholder="Гастрит" name="gastritis"
+                       th:field="*{gastritis}" th:required="required">
+            </div>
+            <button id="addNewAmbulanceCallsData" class="btn btn-primary center-block" type="submit">Записать новые данные</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/addingData.js"></script>
+</body>
+</html>

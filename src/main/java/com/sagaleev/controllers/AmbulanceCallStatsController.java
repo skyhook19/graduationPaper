@@ -3,11 +3,16 @@ package com.sagaleev.controllers;
 import com.sagaleev.domain.dto.AmbulanceCallStatsDto;
 import com.sagaleev.domain.dtoConverter.AmbulanceCallStatsConverter;
 import com.sagaleev.domain.model.AmbulanceCallStats;
+import com.sagaleev.domain.model.Hospital;
 import com.sagaleev.service.AmbulanceCallStatsService;
+import com.sagaleev.service.HospitalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,10 +22,12 @@ import java.util.List;
 public class AmbulanceCallStatsController {
 
     private final AmbulanceCallStatsService ambulanceCallStatsService;
+    private final HospitalService hospitalService;
 
     @Autowired
-    public AmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService) {
+    public AmbulanceCallStatsController(AmbulanceCallStatsService ambulanceCallStatsService, HospitalService hospitalService) {
         this.ambulanceCallStatsService = ambulanceCallStatsService;
+        this.hospitalService = hospitalService;
     }
 
     @GetMapping(value = "/weatherDiseaseChart")
@@ -52,5 +59,21 @@ public class AmbulanceCallStatsController {
 
         model.addAttribute("stats", dtos);
         return "ambulanceCallsDataPage";
+    }
+
+    @GetMapping(value = "/addNewAmbulanceCallData")
+    public String addNewData(@RequestParam(value = "success", required = false) String success, Model model){
+        model.addAttribute("ambStats", new AmbulanceCallStatsDto());
+        model.addAttribute("success", success != null);
+        return "addNewAmbulanceCallsData";
+    }
+
+    @PostMapping(value = "/addNewAmbulanceCallData")
+    public String addNewData(@ModelAttribute("ambStats") AmbulanceCallStatsDto ambStats, Model model){
+        Hospital hospital = hospitalService.getCurrentHospital();
+        List<AmbulanceCallStats> stats = AmbulanceCallStatsConverter.convertOneDtoToList(ambStats, hospital);
+        ambulanceCallStatsService.saveAll(stats);
+
+        return "redirect:/addNewAmbulanceCallData?success";
     }
 }
